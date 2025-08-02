@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Upload, FileText, Briefcase, Target } from "lucide-react";
+import { Upload, FileText, Briefcase, Target, ChevronUp, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const TOTAL_STEPS = 6;
@@ -58,6 +58,8 @@ export default function BetaOnboarding() {
   const [currentStep, setCurrentStep] = useState(1);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [showWorkStyleDialog, setShowWorkStyleDialog] = useState(false);
+  const [sortColumn, setSortColumn] = useState<'years' | 'lastUsed' | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
   const [data, setData] = useState<OnboardingData>({
     personalInfo: {
       firstName: "",
@@ -165,6 +167,57 @@ export default function BetaOnboarding() {
       ...prev,
       skills: prev.skills.filter(s => s !== skill),
     }));
+  };
+
+  // Skills data for the table
+  const skillsData = [
+    { name: "Agile Development", type: "skill", years: 1.7, lastUsed: "2020" },
+    { name: "ASP.NET", type: "software", years: 1.3, lastUsed: "2020" },
+    { name: "AWS Cloud Platform", type: "software", years: 1.5, lastUsed: "2024" },
+    { name: "C# .NET", type: "software", years: 1.5, lastUsed: "2020" },
+    { name: "C++", type: "skill", years: 0.7, lastUsed: "Current" },
+    { name: "Confluence Documentation Tool", type: "software", years: 1.5, lastUsed: "2022" },
+    { name: "Cross-functional Leadership", type: "skill", years: 1.5, lastUsed: "2022" },
+    { name: "Data Analysis", type: "skill", years: 1.5, lastUsed: "2022" },
+    { name: "DO-178C Standards", type: "skill", years: 0.5, lastUsed: "Current" },
+    { name: "Docker Software", type: "software", years: 1, lastUsed: "2024" },
+    { name: "Embedded Systems", type: "skill", years: 0.7, lastUsed: "Current" },
+  ];
+
+  const handleSort = (column: 'years' | 'lastUsed') => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
+  const getSortedSkills = () => {
+    if (!sortColumn) return skillsData;
+
+    return [...skillsData].sort((a, b) => {
+      if (sortColumn === 'years') {
+        const comparison = a.years - b.years;
+        return sortDirection === 'asc' ? comparison : -comparison;
+      } else if (sortColumn === 'lastUsed') {
+        // Handle "Current" as the most recent
+        const aValue = a.lastUsed === 'Current' ? '2025' : a.lastUsed;
+        const bValue = b.lastUsed === 'Current' ? '2025' : b.lastUsed;
+        const comparison = parseInt(aValue) - parseInt(bValue);
+        return sortDirection === 'asc' ? comparison : -comparison;
+      }
+      return 0;
+    });
+  };
+
+  const getSortIcon = (column: 'years' | 'lastUsed') => {
+    if (sortColumn !== column) {
+      return <ChevronUp className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100" />;
+    }
+    return sortDirection === 'asc' ? 
+      <ChevronUp className="w-4 h-4" /> : 
+      <ChevronDown className="w-4 h-4" />;
   };
 
   const renderStepContent = () => {
@@ -581,110 +634,46 @@ export default function BetaOnboarding() {
                       <TableHeader>
                         <TableRow>
                           <TableHead>Skill/Software</TableHead>
-                          <TableHead>Years Experience</TableHead>
-                          <TableHead>Last Used</TableHead>
+                          <TableHead 
+                            className="cursor-pointer select-none group hover:bg-muted/50 transition-colors"
+                            onClick={() => handleSort('years')}
+                          >
+                            <div className="flex items-center gap-1">
+                              Years Experience
+                              {getSortIcon('years')}
+                            </div>
+                          </TableHead>
+                          <TableHead 
+                            className="cursor-pointer select-none group hover:bg-muted/50 transition-colors"
+                            onClick={() => handleSort('lastUsed')}
+                          >
+                            <div className="flex items-center gap-1">
+                              Last Used
+                              {getSortIcon('lastUsed')}
+                            </div>
+                          </TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        <TableRow>
-                          <TableCell>
-                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
-                              Agile Development
-                            </Badge>
-                          </TableCell>
-                          <TableCell>1.7</TableCell>
-                          <TableCell>2020</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
-                              ASP.NET
-                            </Badge>
-                          </TableCell>
-                          <TableCell>1.3</TableCell>
-                          <TableCell>2020</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
-                              AWS Cloud Platform
-                            </Badge>
-                          </TableCell>
-                          <TableCell>1.5</TableCell>
-                          <TableCell>2024</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
-                              C# .NET
-                            </Badge>
-                          </TableCell>
-                          <TableCell>1.5</TableCell>
-                          <TableCell>2020</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
-                              C++
-                            </Badge>
-                          </TableCell>
-                          <TableCell>0.7</TableCell>
-                          <TableCell className="text-success font-medium">Current</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
-                              Confluence Documentation Tool
-                            </Badge>
-                          </TableCell>
-                          <TableCell>1.5</TableCell>
-                          <TableCell>2022</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
-                              Cross-functional Leadership
-                            </Badge>
-                          </TableCell>
-                          <TableCell>1.5</TableCell>
-                          <TableCell>2022</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
-                              Data Analysis
-                            </Badge>
-                          </TableCell>
-                          <TableCell>1.5</TableCell>
-                          <TableCell>2022</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
-                              DO-178C Standards
-                            </Badge>
-                          </TableCell>
-                          <TableCell>0.5</TableCell>
-                          <TableCell className="text-success font-medium">Current</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
-                              Docker Software
-                            </Badge>
-                          </TableCell>
-                          <TableCell>1</TableCell>
-                          <TableCell>2024</TableCell>
-                        </TableRow>
-                        <TableRow>
-                          <TableCell>
-                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
-                              Embedded Systems
-                            </Badge>
-                          </TableCell>
-                          <TableCell>0.7</TableCell>
-                          <TableCell className="text-success font-medium">Current</TableCell>
-                        </TableRow>
+                        {getSortedSkills().map((skill, index) => (
+                          <TableRow key={index}>
+                            <TableCell>
+                              <Badge 
+                                variant="secondary" 
+                                className={skill.type === 'skill' 
+                                  ? "bg-blue-50 text-blue-700 border-blue-200" 
+                                  : "bg-green-50 text-green-700 border-green-200"
+                                }
+                              >
+                                {skill.name}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>{skill.years}</TableCell>
+                            <TableCell className={skill.lastUsed === 'Current' ? 'text-success font-medium' : ''}>
+                              {skill.lastUsed}
+                            </TableCell>
+                          </TableRow>
+                        ))}
                       </TableBody>
                     </Table>
                   </div>
