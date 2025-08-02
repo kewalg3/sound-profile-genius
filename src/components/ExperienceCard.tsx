@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Briefcase, ChevronDown, ChevronUp, Calendar, MapPin, Plus } from "lucide-react";
+import AIInterviewDialog from "./AIInterviewDialog";
 
 interface Job {
   title: string;
@@ -29,6 +30,7 @@ export default function ExperienceCard({ job, isExpanded, onToggle }: Experience
     skills: '',
     software: ''
   });
+  const [showInterviewDialog, setShowInterviewDialog] = useState(false);
 
   const handleAddSkill = (type: 'skills' | 'software', value: string) => {
     if (value.trim()) {
@@ -67,7 +69,10 @@ export default function ExperienceCard({ job, isExpanded, onToggle }: Experience
           </div>
           
           <div className="flex items-center gap-2 flex-shrink-0">
-            <Button className="bg-gradient-primary hover:opacity-90">
+            <Button 
+              className="bg-gradient-primary hover:opacity-90"
+              onClick={() => setShowInterviewDialog(true)}
+            >
               Start AI Interview
             </Button>
             <Button variant="outline" onClick={onToggle}>
@@ -221,6 +226,12 @@ export default function ExperienceCard({ job, isExpanded, onToggle }: Experience
           </>
         )}
       </div>
+      
+      <AIInterviewDialog 
+        isOpen={showInterviewDialog}
+        onClose={() => setShowInterviewDialog(false)}
+        job={job}
+      />
     </Card>
   );
 }
