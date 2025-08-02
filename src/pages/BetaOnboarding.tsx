@@ -4,6 +4,7 @@ import OnboardingLayout from "@/components/OnboardingLayout";
 import FileUpload from "@/components/FileUpload";
 import VoiceRecorder from "@/components/VoiceRecorder";
 import ProfilePhotoUpload from "@/components/ProfilePhotoUpload";
+import ExperienceCard from "@/components/ExperienceCard";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -12,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Upload } from "lucide-react";
+import { Upload, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const TOTAL_STEPS = 6;
@@ -52,6 +53,7 @@ interface OnboardingData {
 
 export default function BetaOnboarding() {
   const [currentStep, setCurrentStep] = useState(1);
+  const [expandedCard, setExpandedCard] = useState<number | null>(null);
   const [data, setData] = useState<OnboardingData>({
     personalInfo: {
       firstName: "",
@@ -432,23 +434,73 @@ export default function BetaOnboarding() {
             <div className="text-center space-y-2">
               <h2 className="text-2xl font-bold">Experience Enhancement</h2>
               <p className="text-muted-foreground">
-                Record your voice to add personality and authenticity to your profile
+                Experience the future of resume processing with AI-powered skills extraction, contextual job analysis, and intelligent career insights.
               </p>
             </div>
-            <VoiceRecorder
-              onRecordingComplete={(blob) => setData(prev => ({ ...prev, voiceRecording: blob }))}
-            />
-            <Card className="p-4 bg-gradient-subtle">
-              <div className="text-sm text-muted-foreground">
-                <p className="font-medium mb-2">💡 Pro Tips for Voice Recording:</p>
-                <ul className="space-y-1 text-xs">
-                  <li>• Speak clearly and at a normal pace</li>
-                  <li>• Record in a quiet environment</li>
-                  <li>• Aim for 30-60 seconds of speaking</li>
-                  <li>• Introduce yourself and mention your career interests</li>
-                </ul>
+            
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-6">
+                <FileText className="w-5 h-5" />
+                <h3 className="text-lg font-semibold">Experience Enhancement</h3>
               </div>
-            </Card>
+
+              {/* Experience Cards */}
+              <div className="space-y-4">
+                {[
+                  {
+                    title: "Senior Software Engineer",
+                    company: "AeroSpace Dynamics",
+                    duration: "2024 - Present",
+                    location: "Denver, CO",
+                    description: "Leading development of mission-critical flight control software systems for commercial and military aircraft. Architecting real-time embedded systems using C++ and Python for avionics platforms. Implementing safety-critical software following DO-178C aviation standards and conducting comprehensive testing protocols. Collaborating with systems engineers and hardware teams to integrate software with flight hardware. Managing technical documentation and regulatory compliance for FAA certification processes.",
+                    skills: ["C++", "Python", "Embedded Systems", "Real-time Systems", "DO-178C Standards", "MATLAB", "Linux Operating System"],
+                    software: ["Git Version Control Tool", "AI Suggested Software", "Excel", "PowerPoint", "Slack", "Trello", "Asana", "Monday.com", "Tableau", "Power BI", "Salesforce", "HubSpot", "Zoom", "Teams"],
+                    aiSuggestedSkills: ["Leadership", "Communication", "Problem Solving", "Team Collaboration", "Strategic Planning", "Project Management", "Data Analysis", "Quality Assurance", "Budget Management", "Risk Management", "Change Management", "Training"],
+                    aiSuggestedSoftware: []
+                  },
+                  {
+                    title: "Senior Software Engineer",
+                    company: "TechCorp Inc.",
+                    duration: "2022 - 2024",
+                    location: "San Francisco, CA",
+                    description: "Developed scalable web applications using modern JavaScript frameworks and cloud technologies. Led a team of 5 engineers in delivering high-quality software solutions. Implemented microservices architecture and improved system performance by 40%.",
+                    skills: ["JavaScript", "React", "Node.js", "AWS", "Docker", "Kubernetes", "TypeScript"],
+                    software: ["Git", "Jira", "Slack", "VS Code", "Docker Desktop", "AWS Console"],
+                    aiSuggestedSkills: ["Team Leadership", "Agile Methodology", "System Design"],
+                    aiSuggestedSoftware: ["Jenkins", "Terraform", "New Relic"]
+                  },
+                  {
+                    title: "Product Manager",
+                    company: "StartupX",
+                    duration: "2020 - 2022",
+                    location: "Austin, TX",
+                    description: "Managed product roadmap and strategy for B2B SaaS platform. Collaborated with cross-functional teams to define requirements and prioritize features. Increased user engagement by 60% through data-driven product decisions.",
+                    skills: ["Product Strategy", "Data Analysis", "User Research", "Agile", "Scrum"],
+                    software: ["Figma", "Mixpanel", "Amplitude", "Notion", "Slack"],
+                    aiSuggestedSkills: ["Market Research", "Competitive Analysis", "Stakeholder Management"],
+                    aiSuggestedSoftware: ["ProductBoard", "Miro", "Confluence"]
+                  },
+                  {
+                    title: "Software Developer",
+                    company: "SecureLife Insurance",
+                    duration: "2018 - 2020",
+                    location: "Chicago, IL",
+                    description: "Built and maintained insurance management systems using Java and Spring framework. Developed RESTful APIs and integrated with third-party services. Improved application security and implemented automated testing.",
+                    skills: ["Java", "Spring Framework", "SQL", "REST APIs", "JUnit"],
+                    software: ["IntelliJ IDEA", "Maven", "Jenkins", "Oracle Database"],
+                    aiSuggestedSkills: ["Software Architecture", "Database Design", "API Design"],
+                    aiSuggestedSoftware: ["SonarQube", "Postman", "Swagger"]
+                  }
+                ].map((job, index) => (
+                  <ExperienceCard
+                    key={index}
+                    job={job}
+                    isExpanded={expandedCard === index}
+                    onToggle={() => setExpandedCard(expandedCard === index ? null : index)}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         );
 
