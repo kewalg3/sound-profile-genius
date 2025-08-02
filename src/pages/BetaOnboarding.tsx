@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { Upload, FileText, Briefcase, Target, ChevronUp, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 5;
 
 interface OnboardingData {
   resume?: File;
@@ -98,12 +98,12 @@ export default function BetaOnboarding() {
       setCurrentStep(currentStep + 1);
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      // Complete onboarding
+      // Complete onboarding and go to profile page
       toast({
         title: "Onboarding Complete!",
         description: "Welcome to Job Twin. Your voice-enhanced profile is ready.",
       });
-      navigate("/dashboard");
+      navigate("/profile");
     }
   };
 
@@ -125,9 +125,7 @@ export default function BetaOnboarding() {
       case 4:
         return true; // AI interview is optional
       case 5:
-        return data.skills.length > 0;
-      case 6:
-        return data.verificationComplete;
+        return true; // Skills Intelligence is optional
       default:
         return true;
     }
@@ -697,90 +695,6 @@ export default function BetaOnboarding() {
                   </div>
                 </TabsContent>
               </Tabs>
-            </Card>
-          </div>
-        );
-
-      case 6:
-        return (
-          <div className="space-y-6">
-            <div className="text-center space-y-2">
-              <h2 className="text-2xl font-bold">Identity Verification</h2>
-              <p className="text-muted-foreground">
-                Complete your profile setup and review your information
-              </p>
-            </div>
-            <Card className="p-6 space-y-6">
-              <div className="space-y-4">
-                <div className="text-center space-y-4">
-                  <div className="w-20 h-20 mx-auto bg-gradient-primary rounded-full flex items-center justify-center">
-                    <span className="text-2xl text-primary-foreground font-bold">
-                      {data.personalInfo.firstName.charAt(0)}{data.personalInfo.lastName.charAt(0)}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-semibold">
-                      {data.personalInfo.firstName} {data.personalInfo.lastName}
-                    </h3>
-                    <p className="text-muted-foreground">{data.personalInfo.email}</p>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                  <div>
-                    <h4 className="font-medium mb-2">Profile Completion</h4>
-                    <ul className="space-y-1 text-muted-foreground">
-                      <li className="flex items-center gap-2">
-                        <span className={data.resume ? "text-success" : "text-muted-foreground"}>
-                          {data.resume ? "✓" : "○"}
-                        </span>
-                        Resume uploaded
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="text-success">✓</span>
-                        Personal information
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className={data.voiceRecording ? "text-success" : "text-muted-foreground"}>
-                          {data.voiceRecording ? "✓" : "○"}
-                        </span>
-                        Voice recording (optional)
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="text-success">✓</span>
-                        Career goals defined
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <span className="text-success">✓</span>
-                        Skills added ({data.skills.length})
-                      </li>
-                    </ul>
-                  </div>
-                  
-                  <div>
-                    <h4 className="font-medium mb-2">Next Steps</h4>
-                    <ul className="space-y-1 text-muted-foreground text-sm">
-                      <li>• AI will process your resume and voice profile</li>
-                      <li>• Receive personalized job recommendations</li>
-                      <li>• Access enhanced networking tools</li>
-                      <li>• Get AI-powered interview preparation</li>
-                    </ul>
-                  </div>
-                </div>
-
-                <div className="text-center">
-                  <Button
-                    onClick={() => setData(prev => ({ ...prev, verificationComplete: true }))}
-                    className="bg-gradient-primary hover:opacity-90"
-                    size="lg"
-                    disabled={data.verificationComplete}
-                  >
-                    {data.verificationComplete ? "✓ Verified" : "Complete Setup"}
-                  </Button>
-                </div>
-              </div>
             </Card>
           </div>
         );
