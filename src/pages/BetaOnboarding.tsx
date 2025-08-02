@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import OnboardingLayout from "@/components/OnboardingLayout";
 import FileUpload from "@/components/FileUpload";
 import VoiceRecorder from "@/components/VoiceRecorder";
+import ProfilePhotoUpload from "@/components/ProfilePhotoUpload";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
@@ -23,8 +25,22 @@ interface OnboardingData {
     lastName: string;
     email: string;
     phone: string;
-    location: string;
+    phoneCountry: string;
+    streetAddress: string;
+    city: string;
+    stateProvince: string;
+    zipPostalCode: string;
+    country: string;
+    linkedinProfile: string;
+    githubProfile: string;
+    portfolioWebsite: string;
+    behanceProfile: string;
+    dribbbleProfile: string;
+    mediumProfile: string;
+    twitterProfile: string;
+    stackOverflowProfile: string;
   };
+  profilePhoto?: File;
   workStyle: {
     careerGoals: string;
     workPreferences: string[];
@@ -42,7 +58,20 @@ export default function BetaOnboarding() {
       lastName: "",
       email: "",
       phone: "",
-      location: "",
+      phoneCountry: "+1",
+      streetAddress: "",
+      city: "",
+      stateProvince: "",
+      zipPostalCode: "",
+      country: "United States",
+      linkedinProfile: "",
+      githubProfile: "",
+      portfolioWebsite: "",
+      behanceProfile: "",
+      dribbbleProfile: "",
+      mediumProfile: "",
+      twitterProfile: "",
+      stackOverflowProfile: "",
     },
     workStyle: {
       careerGoals: "",
@@ -158,57 +187,240 @@ export default function BetaOnboarding() {
             <div className="text-center space-y-2">
               <h2 className="text-2xl font-bold">Personal Information</h2>
               <p className="text-muted-foreground">
-                Tell us about yourself to personalize your experience
+                Complete your profile with detailed information
               </p>
             </div>
-            <Card className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name *</Label>
-                  <Input
-                    id="firstName"
-                    value={data.personalInfo.firstName}
-                    onChange={(e) => updatePersonalInfo('firstName', e.target.value)}
-                    placeholder="Enter your first name"
-                  />
+            
+            <Card className="p-6 space-y-6">
+              {/* Basic Information */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Basic Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">First Name *</Label>
+                    <Input
+                      id="firstName"
+                      value={data.personalInfo.firstName}
+                      onChange={(e) => updatePersonalInfo('firstName', e.target.value)}
+                      placeholder="Enter your first name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Last Name *</Label>
+                    <Input
+                      id="lastName"
+                      value={data.personalInfo.lastName}
+                      onChange={(e) => updatePersonalInfo('lastName', e.target.value)}
+                      placeholder="Enter your last name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email Address *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={data.personalInfo.email}
+                      onChange={(e) => updatePersonalInfo('email', e.target.value)}
+                      placeholder="Enter your email address"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name *</Label>
-                  <Input
-                    id="lastName"
-                    value={data.personalInfo.lastName}
-                    onChange={(e) => updatePersonalInfo('lastName', e.target.value)}
-                    placeholder="Enter your last name"
-                  />
+              </div>
+
+              <Separator />
+
+              {/* Address */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Address</h3>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="streetAddress">Street Address</Label>
+                    <Input
+                      id="streetAddress"
+                      value={data.personalInfo.streetAddress}
+                      onChange={(e) => updatePersonalInfo('streetAddress', e.target.value)}
+                      placeholder="Street address"
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="city">City</Label>
+                      <Input
+                        id="city"
+                        value={data.personalInfo.city}
+                        onChange={(e) => updatePersonalInfo('city', e.target.value)}
+                        placeholder="City"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="stateProvince">State/Province</Label>
+                      <Input
+                        id="stateProvince"
+                        value={data.personalInfo.stateProvince}
+                        onChange={(e) => updatePersonalInfo('stateProvince', e.target.value)}
+                        placeholder="State/Province"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="zipPostalCode">ZIP/Postal Code</Label>
+                      <Input
+                        id="zipPostalCode"
+                        value={data.personalInfo.zipPostalCode}
+                        onChange={(e) => updatePersonalInfo('zipPostalCode', e.target.value)}
+                        placeholder="ZIP/Postal Code"
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="country">Country</Label>
+                    <Select
+                      value={data.personalInfo.country}
+                      onValueChange={(value) => updatePersonalInfo('country', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="United States">United States</SelectItem>
+                        <SelectItem value="Canada">Canada</SelectItem>
+                        <SelectItem value="United Kingdom">United Kingdom</SelectItem>
+                        <SelectItem value="Australia">Australia</SelectItem>
+                        <SelectItem value="Germany">Germany</SelectItem>
+                        <SelectItem value="France">France</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address *</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={data.personalInfo.email}
-                    onChange={(e) => updatePersonalInfo('email', e.target.value)}
-                    placeholder="Enter your email address"
-                  />
+              </div>
+
+              <Separator />
+
+              {/* Phone Number */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Phone Number</h3>
+                <div className="flex gap-2">
+                  <div className="w-24">
+                    <Select
+                      value={data.personalInfo.phoneCountry}
+                      onValueChange={(value) => updatePersonalInfo('phoneCountry', value)}
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="+1">🇺🇸 +1</SelectItem>
+                        <SelectItem value="+44">🇬🇧 +44</SelectItem>
+                        <SelectItem value="+49">🇩🇪 +49</SelectItem>
+                        <SelectItem value="+33">🇫🇷 +33</SelectItem>
+                        <SelectItem value="+61">🇦🇺 +61</SelectItem>
+                        <SelectItem value="+1">🇨🇦 +1</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex-1">
+                    <Input
+                      value={data.personalInfo.phone}
+                      onChange={(e) => updatePersonalInfo('phone', e.target.value)}
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    value={data.personalInfo.phone}
-                    onChange={(e) => updatePersonalInfo('phone', e.target.value)}
-                    placeholder="Enter your phone number"
-                  />
+              </div>
+
+              <Separator />
+
+              {/* Online Presence */}
+              <div className="space-y-4">
+                <div>
+                  <h3 className="text-lg font-semibold">Online Presence (Optional)</h3>
+                  <p className="text-sm text-muted-foreground">Add your professional profiles and portfolios</p>
                 </div>
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="location">Location</Label>
-                  <Input
-                    id="location"
-                    value={data.personalInfo.location}
-                    onChange={(e) => updatePersonalInfo('location', e.target.value)}
-                    placeholder="City, State/Province, Country"
-                  />
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="linkedinProfile">LinkedIn Profile</Label>
+                    <Input
+                      id="linkedinProfile"
+                      value={data.personalInfo.linkedinProfile}
+                      onChange={(e) => updatePersonalInfo('linkedinProfile', e.target.value)}
+                      placeholder="https://linkedin.com/in/yourprofile"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="githubProfile">GitHub Profile</Label>
+                    <Input
+                      id="githubProfile"
+                      value={data.personalInfo.githubProfile}
+                      onChange={(e) => updatePersonalInfo('githubProfile', e.target.value)}
+                      placeholder="https://github.com/yourusername"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="portfolioWebsite">Portfolio/Website</Label>
+                    <Input
+                      id="portfolioWebsite"
+                      value={data.personalInfo.portfolioWebsite}
+                      onChange={(e) => updatePersonalInfo('portfolioWebsite', e.target.value)}
+                      placeholder="https://yourportfolio.com"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="behanceProfile">Behance (Designers)</Label>
+                    <Input
+                      id="behanceProfile"
+                      value={data.personalInfo.behanceProfile}
+                      onChange={(e) => updatePersonalInfo('behanceProfile', e.target.value)}
+                      placeholder="https://behance.net/yourprofile"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="dribbbleProfile">Dribbble (Designers)</Label>
+                    <Input
+                      id="dribbbleProfile"
+                      value={data.personalInfo.dribbbleProfile}
+                      onChange={(e) => updatePersonalInfo('dribbbleProfile', e.target.value)}
+                      placeholder="https://dribbble.com/yourprofile"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="mediumProfile">Medium (Writers)</Label>
+                    <Input
+                      id="mediumProfile"
+                      value={data.personalInfo.mediumProfile}
+                      onChange={(e) => updatePersonalInfo('mediumProfile', e.target.value)}
+                      placeholder="https://medium.com/@yourusername"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="twitterProfile">Twitter/X</Label>
+                    <Input
+                      id="twitterProfile"
+                      value={data.personalInfo.twitterProfile}
+                      onChange={(e) => updatePersonalInfo('twitterProfile', e.target.value)}
+                      placeholder="https://twitter.com/yourusername"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="stackOverflowProfile">Stack Overflow (Developers)</Label>
+                    <Input
+                      id="stackOverflowProfile"
+                      value={data.personalInfo.stackOverflowProfile}
+                      onChange={(e) => updatePersonalInfo('stackOverflowProfile', e.target.value)}
+                      placeholder="https://stackoverflow.com/users/yourprofile"
+                    />
+                  </div>
                 </div>
+              </div>
+
+              <Separator />
+
+              {/* Profile Photo */}
+              <div className="space-y-4">
+                <ProfilePhotoUpload
+                  onPhotoSelect={(file) => setData(prev => ({ ...prev, profilePhoto: file }))}
+                  currentPhoto={data.profilePhoto}
+                />
               </div>
             </Card>
           </div>
