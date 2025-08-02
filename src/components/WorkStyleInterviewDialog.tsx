@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Mic, MicOff, Play, Pause, FileText, Clock, Target, TrendingUp, Briefcase } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Mic, MicOff, Play, Pause, FileText, Clock, Target, TrendingUp, Briefcase, ChevronDown, User, Building } from "lucide-react";
 
 interface WorkStyleInterviewDialogProps {
   isOpen: boolean;
@@ -19,6 +23,16 @@ export default function WorkStyleInterviewDialog({ isOpen, onClose }: WorkStyleI
   const [transcript, setTranscript] = useState<string[]>([]);
   const [showTranscriptDialog, setShowTranscriptDialog] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [isContextOpen, setIsContextOpen] = useState(false);
+  
+  // Recruiter context state
+  const [recruiterContext, setRecruiterContext] = useState({
+    recruiterName: "",
+    recruiterTitle: "",
+    company: "",
+    position: "",
+    jobDescription: ""
+  });
 
   // Mock transcript data for work style interview
   const mockTranscript = [
@@ -74,7 +88,19 @@ export default function WorkStyleInterviewDialog({ isOpen, onClose }: WorkStyleI
     setIsRecording(false);
     setTranscript([]);
     setCurrentTime(0);
+    setIsContextOpen(false);
+    setRecruiterContext({
+      recruiterName: "",
+      recruiterTitle: "",
+      company: "",
+      position: "",
+      jobDescription: ""
+    });
     onClose();
+  };
+
+  const updateRecruiterContext = (field: keyof typeof recruiterContext, value: string) => {
+    setRecruiterContext(prev => ({ ...prev, [field]: value }));
   };
 
   const renderInitialStage = () => (
@@ -98,6 +124,85 @@ export default function WorkStyleInterviewDialog({ isOpen, onClose }: WorkStyleI
           <li>• Exploration of what motivates you professionally</li>
         </ul>
       </Card>
+
+      {/* Recruiter Context Form */}
+      <Collapsible open={isContextOpen} onOpenChange={setIsContextOpen}>
+        <CollapsibleTrigger asChild>
+          <Button 
+            variant="outline" 
+            className="w-full justify-between"
+          >
+            <span>Interview Context (Optional)</span>
+            <ChevronDown className={`w-4 h-4 transition-transform ${isContextOpen ? 'rotate-180' : ''}`} />
+          </Button>
+        </CollapsibleTrigger>
+        <CollapsibleContent className="mt-4">
+          <Card className="p-4 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="recruiterName" className="flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  Recruiter Name
+                </Label>
+                <Input
+                  id="recruiterName"
+                  value={recruiterContext.recruiterName}
+                  onChange={(e) => updateRecruiterContext('recruiterName', e.target.value)}
+                  placeholder="Enter your name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="recruiterTitle" className="flex items-center gap-2">
+                  <Briefcase className="w-4 h-4" />
+                  Your Title
+                </Label>
+                <Input
+                  id="recruiterTitle"
+                  value={recruiterContext.recruiterTitle}
+                  onChange={(e) => updateRecruiterContext('recruiterTitle', e.target.value)}
+                  placeholder="e.g., Senior Recruiter"
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="company" className="flex items-center gap-2">
+                  <Building className="w-4 h-4" />
+                  Company
+                </Label>
+                <Input
+                  id="company"
+                  value={recruiterContext.company}
+                  onChange={(e) => updateRecruiterContext('company', e.target.value)}
+                  placeholder="Company name"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="position" className="flex items-center gap-2">
+                  <Target className="w-4 h-4" />
+                  Position Looking For
+                </Label>
+                <Input
+                  id="position"
+                  value={recruiterContext.position}
+                  onChange={(e) => updateRecruiterContext('position', e.target.value)}
+                  placeholder="e.g., Technical Lead"
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="jobDescription">Job Description</Label>
+              <Textarea
+                id="jobDescription"
+                value={recruiterContext.jobDescription}
+                onChange={(e) => updateRecruiterContext('jobDescription', e.target.value)}
+                placeholder="Provide a brief description of the role, requirements, and what you're looking for in a candidate..."
+                rows={3}
+              />
+            </div>
+          </Card>
+        </CollapsibleContent>
+      </Collapsible>
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={handleClose} className="flex-1">

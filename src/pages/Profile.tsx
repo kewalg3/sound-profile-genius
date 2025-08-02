@@ -154,33 +154,12 @@ export default function Profile() {
                 </div>
               </div>
 
-              {/* Interview Context Dropdown */}
-              <Collapsible 
-                open={isInterviewContextOpen} 
-                onOpenChange={setIsInterviewContextOpen}
-                className="w-full"
-              >
-                <CollapsibleTrigger asChild>
-                  <Button 
-                    variant="ghost" 
-                    className="w-full justify-between text-left font-normal border border-dashed border-muted-foreground/30 hover:border-primary/50 transition-colors"
-                  >
-                    <div className="flex items-center gap-2">
-                      <Volume2 className="w-4 h-4" />
-                      <span>Interview Context (Optional)</span>
-                    </div>
-                    <ChevronDown className={`w-4 h-4 transition-transform ${isInterviewContextOpen ? 'rotate-180' : ''}`} />
-                  </Button>
-                </CollapsibleTrigger>
-                <CollapsibleContent className="mt-3">
-                  <Card className="p-4 bg-background/80 backdrop-blur-sm">
-                    <p className="text-sm text-muted-foreground">
-                      Provide specific context about the role, company, or particular aspects you'd like to explore during the conversation.
-                      This helps the AI tailor questions and focus on relevant areas of expertise.
-                    </p>
-                  </Card>
-                </CollapsibleContent>
-              </Collapsible>
+              {/* Interview Context Note */}
+              <div className="text-center">
+                <p className="text-sm text-muted-foreground mb-4">
+                  Click "Start Voice Screening" to begin an AI-powered conversation and provide interview context.
+                </p>
+              </div>
 
               <div className="flex justify-center">
                 <Button 
