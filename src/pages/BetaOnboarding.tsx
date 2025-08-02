@@ -5,6 +5,7 @@ import FileUpload from "@/components/FileUpload";
 import VoiceRecorder from "@/components/VoiceRecorder";
 import ProfilePhotoUpload from "@/components/ProfilePhotoUpload";
 import ExperienceCard from "@/components/ExperienceCard";
+import WorkStyleInterviewDialog from "@/components/WorkStyleInterviewDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -13,7 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Upload, FileText } from "lucide-react";
+import { Upload, FileText, Briefcase } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const TOTAL_STEPS = 6;
@@ -54,6 +55,7 @@ interface OnboardingData {
 export default function BetaOnboarding() {
   const [currentStep, setCurrentStep] = useState(1);
   const [expandedCard, setExpandedCard] = useState<number | null>(null);
+  const [showWorkStyleDialog, setShowWorkStyleDialog] = useState(false);
   const [data, setData] = useState<OnboardingData>({
     personalInfo: {
       firstName: "",
@@ -117,7 +119,7 @@ export default function BetaOnboarding() {
       case 3:
         return true; // Optional step
       case 4:
-        return data.workStyle.careerGoals.length > 0;
+        return true; // AI interview is optional
       case 5:
         return data.skills.length > 0;
       case 6:
@@ -510,49 +512,41 @@ export default function BetaOnboarding() {
             <div className="text-center space-y-2">
               <h2 className="text-2xl font-bold">Work Style & Career Goals</h2>
               <p className="text-muted-foreground">
-                Help us understand your professional aspirations and work preferences
+                Experience the future of resume processing with AI-powered skills extraction, contextual job analysis, and intelligent career insights.
               </p>
             </div>
-            <Card className="p-6 space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="careerGoals">Career Goals & Aspirations *</Label>
-                <Textarea
-                  id="careerGoals"
-                  value={data.workStyle.careerGoals}
-                  onChange={(e) => updateWorkStyle('careerGoals', e.target.value)}
-                  placeholder="Describe your career goals, what you're looking for in your next role, and your long-term aspirations..."
-                  rows={4}
-                />
-              </div>
-              
-              <Separator />
-              
-              <div className="space-y-4">
-                <div>
-                  <Label>Preferred Work Environment</Label>
-                  <p className="text-sm text-muted-foreground mb-3">Select all that apply</p>
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                    {["Remote", "Hybrid", "In-Office", "Flexible Hours", "Team Collaboration", "Independent Work"].map((pref) => (
-                      <label key={pref} className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={data.workStyle.workPreferences.includes(pref)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              updateWorkStyle('workPreferences', [...data.workStyle.workPreferences, pref]);
-                            } else {
-                              updateWorkStyle('workPreferences', data.workStyle.workPreferences.filter(p => p !== pref));
-                            }
-                          }}
-                          className="rounded border-gray-300"
-                        />
-                        <span className="text-sm">{pref}</span>
-                      </label>
-                    ))}
+            
+            <div className="flex justify-center">
+              <Card className="p-8 max-w-md w-full text-center space-y-6">
+                <div className="space-y-4">
+                  <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto">
+                    <Briefcase className="w-8 h-8 text-primary" />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <div className="inline-block bg-muted px-3 py-1 rounded-full text-sm font-medium">
+                      Work Style & Career Goals
+                    </div>
+                    <p className="text-muted-foreground">
+                      This interview will focus on your work type and career objectives
+                    </p>
                   </div>
                 </div>
-              </div>
-            </Card>
+                
+                <Button 
+                  onClick={() => setShowWorkStyleDialog(true)}
+                  className="w-full bg-gradient-primary hover:opacity-90"
+                  size="lg"
+                >
+                  Start Interview
+                </Button>
+              </Card>
+            </div>
+            
+            <WorkStyleInterviewDialog 
+              isOpen={showWorkStyleDialog}
+              onClose={() => setShowWorkStyleDialog(false)}
+            />
           </div>
         );
 
