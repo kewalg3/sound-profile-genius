@@ -14,12 +14,11 @@ const stepNames = [
   "Personal Information", 
   "Experience Enhancement",
   "Work Style & Career Goals",
-  "Skills Intelligence",
-  "Identity Verification"
+  "Skills Intelligence"
 ];
 
 const stepIcons = [
-  "📄", "👤", "📈", "🎯", "🧠", "✅"
+  "📄", "👤", "📈", "🎯", "🧠"
 ];
 
 export default function OnboardingLayout({ 

@@ -2,13 +2,67 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, Mic, MapPin, User } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ChevronDown, Mic, MapPin, User, Target, ChevronUp } from "lucide-react";
 
 export default function Profile() {
   const [isInterviewContextOpen, setIsInterviewContextOpen] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [isSkillsOpen, setIsSkillsOpen] = useState(false);
+  const [sortColumn, setSortColumn] = useState<'years' | 'lastUsed' | null>(null);
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+  // Skills data for the table (same as in Skills Intelligence)
+  const skillsData = [
+    { name: "Agile Development", type: "skill", years: 1.7, lastUsed: "2020" },
+    { name: "ASP.NET", type: "software", years: 1.3, lastUsed: "2020" },
+    { name: "AWS Cloud Platform", type: "software", years: 1.5, lastUsed: "2024" },
+    { name: "C# .NET", type: "software", years: 1.5, lastUsed: "2020" },
+    { name: "C++", type: "skill", years: 0.7, lastUsed: "Current" },
+    { name: "Confluence Documentation Tool", type: "software", years: 1.5, lastUsed: "2022" },
+    { name: "Cross-functional Leadership", type: "skill", years: 1.5, lastUsed: "2022" },
+    { name: "Data Analysis", type: "skill", years: 1.5, lastUsed: "2022" },
+    { name: "DO-178C Standards", type: "skill", years: 0.5, lastUsed: "Current" },
+    { name: "Docker Software", type: "software", years: 1, lastUsed: "2024" },
+    { name: "Embedded Systems", type: "skill", years: 0.7, lastUsed: "Current" },
+  ];
+
+  const handleSort = (column: 'years' | 'lastUsed') => {
+    if (sortColumn === column) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortColumn(column);
+      setSortDirection('asc');
+    }
+  };
+
+  const getSortedSkills = () => {
+    if (!sortColumn) return skillsData;
+
+    return [...skillsData].sort((a, b) => {
+      if (sortColumn === 'years') {
+        const comparison = a.years - b.years;
+        return sortDirection === 'asc' ? comparison : -comparison;
+      } else if (sortColumn === 'lastUsed') {
+        const aValue = a.lastUsed === 'Current' ? '2025' : a.lastUsed;
+        const bValue = b.lastUsed === 'Current' ? '2025' : b.lastUsed;
+        const comparison = parseInt(aValue) - parseInt(bValue);
+        return sortDirection === 'asc' ? comparison : -comparison;
+      }
+      return 0;
+    });
+  };
+
+  const getSortIcon = (column: 'years' | 'lastUsed') => {
+    if (sortColumn !== column) {
+      return <ChevronUp className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100" />;
+    }
+    return sortDirection === 'asc' ? 
+      <ChevronUp className="w-4 h-4" /> : 
+      <ChevronDown className="w-4 h-4" />;
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -128,11 +182,91 @@ export default function Profile() {
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <Separator />
-                <div className="p-6 bg-muted/20">
-                  <p className="text-sm text-muted-foreground">
-                    Complete resume content would be displayed here, including work experience, 
-                    education, certifications, and other professional details.
-                  </p>
+                <div className="p-6 space-y-8">
+                  {/* Professional Experience */}
+                  <div className="space-y-6">
+                    <h3 className="text-lg font-semibold">Professional Experience</h3>
+                    
+                    {/* Senior Frontend Developer */}
+                    <div className="border-l-4 border-primary pl-4 space-y-2">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold">Senior Frontend Developer</h4>
+                          <p className="text-cyan-500 font-medium">TechCorp Solutions • San Francisco, CA</p>
+                        </div>
+                        <span className="text-sm text-muted-foreground">2022 - Present</span>
+                      </div>
+                      <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                        <li>Led a team of 4 developers in building React applications serving 100,000+ daily users</li>
+                        <li>Improved application performance by 60% through code optimization and modern practices</li>
+                        <li>Implemented comprehensive testing strategies reducing bugs by 40%</li>
+                      </ul>
+                    </div>
+
+                    {/* Frontend Developer */}
+                    <div className="border-l-4 border-primary pl-4 space-y-2">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold">Frontend Developer</h4>
+                          <p className="text-cyan-500 font-medium">StartupXYZ • San Francisco, CA</p>
+                        </div>
+                        <span className="text-sm text-muted-foreground">2020 - 2022</span>
+                      </div>
+                      <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                        <li>Developed and maintained customer-facing web applications using React and TypeScript</li>
+                        <li>Collaborated with design team to implement responsive UI components</li>
+                        <li>Reduced page load times by 45% through performance optimization</li>
+                      </ul>
+                    </div>
+
+                    {/* Junior Developer */}
+                    <div className="border-l-4 border-primary pl-4 space-y-2">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold">Junior Developer</h4>
+                          <p className="text-cyan-500 font-medium">WebAgency Inc • San Francisco, CA</p>
+                        </div>
+                        <span className="text-sm text-muted-foreground">2019 - 2020</span>
+                      </div>
+                      <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                        <li>Built responsive websites and web applications using HTML, CSS, and JavaScript</li>
+                        <li>Assisted in migration of legacy jQuery applications to modern React framework</li>
+                      </ul>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Education */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Education</h3>
+                    <div className="border-l-4 border-primary pl-4 space-y-2">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <h4 className="font-semibold">Bachelor of Science in Computer Science</h4>
+                          <p className="text-cyan-500 font-medium">University of California, Berkeley</p>
+                        </div>
+                        <span className="text-sm text-muted-foreground">2015 - 2019</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <Separator />
+
+                  {/* Certifications */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-semibold">Certifications</h3>
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className="font-medium">AWS Certified Developer - Associate</span>
+                        <span className="text-sm text-muted-foreground">2023</span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="font-medium">React Developer Certification</span>
+                        <span className="text-sm text-muted-foreground">2022</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </CollapsibleContent>
             </Card>
@@ -157,11 +291,58 @@ export default function Profile() {
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <Separator />
-                <div className="p-6 bg-muted/20">
-                  <p className="text-sm text-muted-foreground">
-                    Detailed skills analysis would be displayed here, including technical skills, 
-                    software proficiency, years of experience, and industry-specific expertise.
-                  </p>
+                <div className="p-6 space-y-4">
+                  <div className="flex items-center gap-2 mb-4">
+                    <Target className="w-5 h-5" />
+                    <h3 className="text-lg font-semibold">Skills & Software Summary</h3>
+                  </div>
+                  
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Skill/Software</TableHead>
+                        <TableHead 
+                          className="cursor-pointer select-none group hover:bg-muted/50 transition-colors"
+                          onClick={() => handleSort('years')}
+                        >
+                          <div className="flex items-center gap-1">
+                            Years Experience
+                            {getSortIcon('years')}
+                          </div>
+                        </TableHead>
+                        <TableHead 
+                          className="cursor-pointer select-none group hover:bg-muted/50 transition-colors"
+                          onClick={() => handleSort('lastUsed')}
+                        >
+                          <div className="flex items-center gap-1">
+                            Last Used
+                            {getSortIcon('lastUsed')}
+                          </div>
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {getSortedSkills().map((skill, index) => (
+                        <TableRow key={index}>
+                          <TableCell>
+                            <Badge 
+                              variant="secondary" 
+                              className={skill.type === 'skill' 
+                                ? "bg-blue-50 text-blue-700 border-blue-200" 
+                                : "bg-green-50 text-green-700 border-green-200"
+                              }
+                            >
+                              {skill.name}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>{skill.years}</TableCell>
+                          <TableCell className={skill.lastUsed === 'Current' ? 'text-success font-medium' : ''}>
+                            {skill.lastUsed}
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
               </CollapsibleContent>
             </Card>
