@@ -218,21 +218,6 @@ export default function AIInterviewDialog({ isOpen, onClose, job }: AIInterviewD
 
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-3">
-            <FileText className="w-4 h-4 text-primary" />
-            <h4 className="font-medium">Enhanced Skills Profile</h4>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700">C++</Badge>
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700">Python</Badge>
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700">Real-time Systems</Badge>
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700">Embedded Programming</Badge>
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700">Formal Verification</Badge>
-            <Badge variant="secondary" className="bg-blue-50 text-blue-700">Safety-Critical Systems</Badge>
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <div className="flex items-center gap-2 mb-3">
             <Clock className="w-4 h-4 text-primary" />
             <h4 className="font-medium">Interview Summary</h4>
           </div>

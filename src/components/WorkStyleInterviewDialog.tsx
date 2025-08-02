@@ -207,21 +207,6 @@ export default function WorkStyleInterviewDialog({ isOpen, onClose }: WorkStyleI
 
         <Card className="p-4">
           <div className="flex items-center gap-2 mb-3">
-            <Briefcase className="w-4 h-4 text-primary" />
-            <h4 className="font-medium">Work Style Preferences</h4>
-          </div>
-          <div className="flex flex-wrap gap-2">
-            <Badge variant="secondary" className="bg-green-50 text-green-700">Hybrid Work</Badge>
-            <Badge variant="secondary" className="bg-green-50 text-green-700">Deep Focus Time</Badge>
-            <Badge variant="secondary" className="bg-green-50 text-green-700">Team Collaboration</Badge>
-            <Badge variant="secondary" className="bg-green-50 text-green-700">Challenging Problems</Badge>
-            <Badge variant="secondary" className="bg-green-50 text-green-700">Impact-Driven</Badge>
-            <Badge variant="secondary" className="bg-green-50 text-green-700">Mentorship</Badge>
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <div className="flex items-center gap-2 mb-3">
             <Clock className="w-4 h-4 text-primary" />
             <h4 className="font-medium">Interview Summary</h4>
           </div>
