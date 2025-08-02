@@ -5,12 +5,14 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ChevronDown, Mic, MapPin, User, Target, ChevronUp } from "lucide-react";
+import ProfileVoiceInterviewDialog from "@/components/ProfileVoiceInterviewDialog";
+import { ChevronDown, Mic, MapPin, User, Target, ChevronUp, Volume2, Sparkles } from "lucide-react";
 
 export default function Profile() {
   const [isInterviewContextOpen, setIsInterviewContextOpen] = useState(false);
   const [isResumeOpen, setIsResumeOpen] = useState(false);
   const [isSkillsOpen, setIsSkillsOpen] = useState(false);
+  const [showVoiceDialog, setShowVoiceDialog] = useState(false);
   const [sortColumn, setSortColumn] = useState<'years' | 'lastUsed' | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
 
@@ -94,24 +96,62 @@ export default function Profile() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="space-y-6">
-          {/* Interactive Voice Screening */}
-          <Card className="p-6 bg-muted/30 border-2 border-dashed border-muted-foreground/20">
-            <div className="text-center space-y-4">
-              <div className="flex items-center justify-center gap-2">
-                <Mic className="w-5 h-5 text-primary" />
-                <h2 className="text-xl font-semibold">Interactive Voice Screening</h2>
+          {/* Enhanced Interactive Voice Screening */}
+          <Card className="relative overflow-hidden border-2 border-gradient-primary/20 bg-gradient-to-br from-primary/5 via-blue-500/5 to-cyan-400/5">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-primary opacity-10 rounded-full -translate-y-16 translate-x-16"></div>
+            <div className="relative p-6 space-y-6">
+              <div className="text-center space-y-4">
+                <div className="flex items-center justify-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-primary rounded-full flex items-center justify-center">
+                    <Mic className="w-6 h-6 text-white" />
+                  </div>
+                  <div className="text-left">
+                    <h2 className="text-2xl font-bold flex items-center gap-2">
+                      Interactive Voice Screening
+                      <Sparkles className="w-5 h-5 text-primary" />
+                    </h2>
+                    <p className="text-sm text-primary/80 font-medium">AI-Powered Professional Conversation</p>
+                  </div>
+                </div>
+                
+                <p className="text-muted-foreground max-w-2xl">
+                  Experience next-generation candidate screening through natural conversation with our AI interviewer. 
+                  Get personalized insights about my experience, skills, and professional background.
+                </p>
               </div>
-              <p className="text-muted-foreground">
-                Start a voice conversation to learn more about my experience and qualifications
-              </p>
               
-              {/* Audio Bars */}
-              <div className="flex items-center justify-center gap-1">
-                <div className="w-1 h-6 bg-muted-foreground/40 rounded-full"></div>
-                <div className="w-1 h-8 bg-muted-foreground/40 rounded-full"></div>
-                <div className="w-1 h-4 bg-muted-foreground/40 rounded-full"></div>
-                <div className="w-1 h-7 bg-muted-foreground/40 rounded-full"></div>
-                <div className="w-1 h-5 bg-muted-foreground/40 rounded-full"></div>
+              {/* Enhanced Audio Visualization */}
+              <div className="flex items-center justify-center gap-2 py-4">
+                {[...Array(12)].map((_, i) => (
+                  <div 
+                    key={i}
+                    className={`rounded-full bg-gradient-to-t from-primary to-cyan-400 opacity-60 animate-pulse`}
+                    style={{
+                      width: `${Math.random() * 6 + 2}px`,
+                      height: `${Math.random() * 40 + 10}px`,
+                      animationDelay: `${i * 0.1}s`,
+                      animationDuration: `${Math.random() * 1 + 1.5}s`
+                    }}
+                  ></div>
+                ))}
+              </div>
+
+              {/* Features Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center gap-3 p-3 bg-white/50 rounded-lg border border-primary/20">
+                  <Volume2 className="w-5 h-5 text-primary" />
+                  <div className="text-sm">
+                    <p className="font-medium">Natural Conversation</p>
+                    <p className="text-muted-foreground">Dynamic Q&A based on responses</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-white/50 rounded-lg border border-primary/20">
+                  <Target className="w-5 h-5 text-primary" />
+                  <div className="text-sm">
+                    <p className="font-medium">Smart Analysis</p>
+                    <p className="text-muted-foreground">Real-time skill & fit assessment</p>
+                  </div>
+                </div>
               </div>
 
               {/* Interview Context Dropdown */}
@@ -123,26 +163,36 @@ export default function Profile() {
                 <CollapsibleTrigger asChild>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-between text-left font-normal"
+                    className="w-full justify-between text-left font-normal border border-dashed border-muted-foreground/30 hover:border-primary/50 transition-colors"
                   >
-                    <span>Interview Context (Optional)</span>
+                    <div className="flex items-center gap-2">
+                      <Volume2 className="w-4 h-4" />
+                      <span>Interview Context (Optional)</span>
+                    </div>
                     <ChevronDown className={`w-4 h-4 transition-transform ${isInterviewContextOpen ? 'rotate-180' : ''}`} />
                   </Button>
                 </CollapsibleTrigger>
-                <CollapsibleContent className="mt-2">
-                  <div className="p-4 bg-background rounded-lg border text-sm text-muted-foreground">
-                    This section can include additional context for the interview.
-                  </div>
+                <CollapsibleContent className="mt-3">
+                  <Card className="p-4 bg-background/80 backdrop-blur-sm">
+                    <p className="text-sm text-muted-foreground">
+                      Provide specific context about the role, company, or particular aspects you'd like to explore during the conversation.
+                      This helps the AI tailor questions and focus on relevant areas of expertise.
+                    </p>
+                  </Card>
                 </CollapsibleContent>
               </Collapsible>
 
-              <Button 
-                size="lg"
-                className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:opacity-90 text-white px-8"
-              >
-                <Mic className="w-4 h-4 mr-2" />
-                Start Voice Screening
-              </Button>
+              <div className="flex justify-center">
+                <Button 
+                  size="lg"
+                  onClick={() => setShowVoiceDialog(true)}
+                  className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white px-8 py-3 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+                >
+                  <Mic className="w-5 h-5 mr-3" />
+                  Start Voice Screening
+                  <Sparkles className="w-4 h-4 ml-2" />
+                </Button>
+              </div>
             </div>
           </Card>
 
@@ -349,6 +399,12 @@ export default function Profile() {
           </Collapsible>
         </div>
       </div>
+      
+      {/* Enhanced Voice Interview Dialog */}
+      <ProfileVoiceInterviewDialog 
+        isOpen={showVoiceDialog}
+        onClose={() => setShowVoiceDialog(false)}
+      />
     </div>
   );
 }
