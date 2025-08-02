@@ -13,8 +13,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Upload, FileText, Briefcase } from "lucide-react";
+import { Upload, FileText, Briefcase, Target } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const TOTAL_STEPS = 6;
@@ -554,79 +556,158 @@ export default function BetaOnboarding() {
         return (
           <div className="space-y-6">
             <div className="text-center space-y-2">
-              <h2 className="text-2xl font-bold">Skills Intelligence</h2>
+              <h2 className="text-2xl font-bold">Skills Intelligence & Context Analysis</h2>
               <p className="text-muted-foreground">
-                Add your key skills to enhance AI matching with relevant opportunities
+                AI-powered analysis of your skills and experience extracted from your resume
               </p>
             </div>
-            <Card className="p-6 space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="skillInput">Add Skills</Label>
-                <div className="flex gap-2">
-                  <Input
-                    id="skillInput"
-                    placeholder="Type a skill and press Enter..."
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                        const skill = e.currentTarget.value.trim();
-                        if (skill) {
-                          addSkill(skill);
-                          e.currentTarget.value = '';
-                        }
-                      }
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    onClick={() => {
-                      const input = document.getElementById('skillInput') as HTMLInputElement;
-                      const skill = input.value.trim();
-                      if (skill) {
-                        addSkill(skill);
-                        input.value = '';
-                      }
-                    }}
-                  >
-                    Add
-                  </Button>
-                </div>
-              </div>
-              
-              {data.skills.length > 0 && (
-                <div className="space-y-2">
-                  <Label>Your Skills</Label>
-                  <div className="flex flex-wrap gap-2">
-                    {data.skills.map((skill) => (
-                      <Badge
-                        key={skill}
-                        variant="secondary"
-                        className="cursor-pointer hover:bg-destructive hover:text-destructive-foreground"
-                        onClick={() => removeSkill(skill)}
-                      >
-                        {skill} ×
-                      </Badge>
-                    ))}
+            
+            <Card className="p-6">
+              <Tabs defaultValue="summary" className="w-full">
+                <TabsList className="grid w-full grid-cols-3">
+                  <TabsTrigger value="summary">Summary</TabsTrigger>
+                  <TabsTrigger value="by-job">By Job</TabsTrigger>
+                  <TabsTrigger value="by-industry">By Industry</TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="summary" className="mt-6">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2 mb-4">
+                      <Target className="w-5 h-5" />
+                      <h3 className="text-lg font-semibold">Skills & Software Summary</h3>
+                    </div>
+                    
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Skill/Software</TableHead>
+                          <TableHead>Years Experience</TableHead>
+                          <TableHead>Last Used</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>
+                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
+                              Agile Development
+                            </Badge>
+                          </TableCell>
+                          <TableCell>1.7</TableCell>
+                          <TableCell>2020</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
+                              ASP.NET
+                            </Badge>
+                          </TableCell>
+                          <TableCell>1.3</TableCell>
+                          <TableCell>2020</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
+                              AWS Cloud Platform
+                            </Badge>
+                          </TableCell>
+                          <TableCell>1.5</TableCell>
+                          <TableCell>2024</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
+                              C# .NET
+                            </Badge>
+                          </TableCell>
+                          <TableCell>1.5</TableCell>
+                          <TableCell>2020</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
+                              C++
+                            </Badge>
+                          </TableCell>
+                          <TableCell>0.7</TableCell>
+                          <TableCell className="text-success font-medium">Current</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
+                              Confluence Documentation Tool
+                            </Badge>
+                          </TableCell>
+                          <TableCell>1.5</TableCell>
+                          <TableCell>2022</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
+                              Cross-functional Leadership
+                            </Badge>
+                          </TableCell>
+                          <TableCell>1.5</TableCell>
+                          <TableCell>2022</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
+                              Data Analysis
+                            </Badge>
+                          </TableCell>
+                          <TableCell>1.5</TableCell>
+                          <TableCell>2022</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
+                              DO-178C Standards
+                            </Badge>
+                          </TableCell>
+                          <TableCell>0.5</TableCell>
+                          <TableCell className="text-success font-medium">Current</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Badge variant="secondary" className="bg-green-50 text-green-700 border-green-200">
+                              Docker Software
+                            </Badge>
+                          </TableCell>
+                          <TableCell>1</TableCell>
+                          <TableCell>2024</TableCell>
+                        </TableRow>
+                        <TableRow>
+                          <TableCell>
+                            <Badge variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
+                              Embedded Systems
+                            </Badge>
+                          </TableCell>
+                          <TableCell>0.7</TableCell>
+                          <TableCell className="text-success font-medium">Current</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
                   </div>
-                  <p className="text-xs text-muted-foreground">Click on a skill to remove it</p>
-                </div>
-              )}
-              
-              <div className="bg-gradient-subtle p-4 rounded-lg">
-                <p className="text-sm font-medium mb-2">💡 Skill Suggestions:</p>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
-                  {["JavaScript", "Python", "Project Management", "Communication", "Leadership", "Data Analysis"].map((suggestion) => (
-                    <button
-                      key={suggestion}
-                      onClick={() => addSkill(suggestion)}
-                      className="text-left p-2 rounded border hover:bg-primary/10 transition-colors"
-                      disabled={data.skills.includes(suggestion)}
-                    >
-                      {suggestion}
-                    </button>
-                  ))}
-                </div>
-              </div>
+                </TabsContent>
+                
+                <TabsContent value="by-job" className="mt-6">
+                  <div className="space-y-4">
+                    <p className="text-muted-foreground">Skills and software organized by job position</p>
+                    <div className="text-center py-8 text-muted-foreground">
+                      Content will be populated based on job analysis
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                <TabsContent value="by-industry" className="mt-6">
+                  <div className="space-y-4">
+                    <p className="text-muted-foreground">Skills and software categorized by industry relevance</p>
+                    <div className="text-center py-8 text-muted-foreground">
+                      Content will be populated based on industry analysis
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
             </Card>
           </div>
         );
