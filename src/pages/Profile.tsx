@@ -114,23 +114,22 @@ export default function Profile() {
                   </div>
                 </div>
                 
-                <p className="text-muted-foreground max-w-2xl">
+                <p className="text-muted-foreground max-w-2xl mx-auto text-center">
                   Experience next-generation candidate screening through natural conversation with our AI interviewer. 
                   Get personalized insights about my experience, skills, and professional background.
                 </p>
               </div>
               
               {/* Enhanced Audio Visualization */}
-              <div className="flex items-center justify-center gap-2 py-4">
+              <div className="flex items-center justify-center gap-1 py-4">
                 {[...Array(12)].map((_, i) => (
                   <div 
                     key={i}
-                    className={`rounded-full bg-gradient-to-t from-primary to-cyan-400 opacity-60 animate-pulse`}
+                    className="rounded-full bg-gradient-to-t from-primary to-cyan-400 opacity-70"
                     style={{
-                      width: `${Math.random() * 6 + 2}px`,
-                      height: `${Math.random() * 40 + 10}px`,
-                      animationDelay: `${i * 0.1}s`,
-                      animationDuration: `${Math.random() * 1 + 1.5}s`
+                      width: '3px',
+                      height: `${Math.random() * 30 + 8}px`,
+                      animation: `pulse ${Math.random() * 0.8 + 0.8}s ease-in-out ${i * 0.1}s infinite alternate`
                     }}
                   ></div>
                 ))}
