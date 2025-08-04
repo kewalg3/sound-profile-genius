@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { Briefcase, ChevronDown, ChevronUp, Calendar, MapPin, Plus } from "lucide-react";
+import { Briefcase, ChevronDown, ChevronUp, Calendar, MapPin, Plus, X } from "lucide-react";
 import AIInterviewDialog from "./AIInterviewDialog";
 
 interface Job {
@@ -23,21 +23,51 @@ interface ExperienceCardProps {
   job: Job;
   isExpanded: boolean;
   onToggle: () => void;
+  onJobUpdate?: (updatedJob: Job) => void;
 }
 
-export default function ExperienceCard({ job, isExpanded, onToggle }: ExperienceCardProps) {
+export default function ExperienceCard({ job, isExpanded, onToggle, onJobUpdate }: ExperienceCardProps) {
+  const [localJob, setLocalJob] = useState(job);
   const [skillsToAdd, setSkillsToAdd] = useState({
     skills: '',
     software: ''
   });
   const [showInterviewDialog, setShowInterviewDialog] = useState(false);
 
+  const updateJob = (updatedJob: Job) => {
+    setLocalJob(updatedJob);
+    onJobUpdate?.(updatedJob);
+  };
+
   const handleAddSkill = (type: 'skills' | 'software', value: string) => {
     if (value.trim()) {
-      // In a real app, this would update the job data
-      console.log(`Adding ${type}: ${value}`);
+      const updatedJob = {
+        ...localJob,
+        [type]: [...localJob[type], value.trim()]
+      };
+      updateJob(updatedJob);
       setSkillsToAdd(prev => ({ ...prev, [type]: '' }));
     }
+  };
+
+  const handleAddSuggestedSkill = (type: 'skills' | 'software', value: string) => {
+    const skillsKey = type === 'skills' ? 'skills' : 'software';
+    const suggestedKey = type === 'skills' ? 'aiSuggestedSkills' : 'aiSuggestedSoftware';
+    
+    const updatedJob = {
+      ...localJob,
+      [skillsKey]: [...localJob[skillsKey], value],
+      [suggestedKey]: localJob[suggestedKey].filter(item => item !== value)
+    };
+    updateJob(updatedJob);
+  };
+
+  const handleRemoveSkill = (type: 'skills' | 'software', value: string) => {
+    const updatedJob = {
+      ...localJob,
+      [type]: localJob[type].filter(item => item !== value)
+    };
+    updateJob(updatedJob);
   };
 
   return (
@@ -51,17 +81,17 @@ export default function ExperienceCard({ job, isExpanded, onToggle }: Experience
             </div>
             
             <div className="space-y-2 flex-1 min-w-0">
-              <h3 className="text-lg font-semibold text-foreground">{job.title}</h3>
+              <h3 className="text-lg font-semibold text-foreground">{localJob.title}</h3>
               <div className="space-y-1">
-                <p className="text-muted-foreground font-medium">{job.company}</p>
+                <p className="text-muted-foreground font-medium">{localJob.company}</p>
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <div className="flex items-center gap-1">
                     <Calendar className="w-4 h-4" />
-                    <span>{job.duration}</span>
+                    <span>{localJob.duration}</span>
                   </div>
                   <div className="flex items-center gap-1">
                     <MapPin className="w-4 h-4" />
-                    <span>{job.location}</span>
+                    <span>{localJob.location}</span>
                   </div>
                 </div>
               </div>
@@ -95,7 +125,7 @@ export default function ExperienceCard({ job, isExpanded, onToggle }: Experience
             <div className="space-y-3">
               <h4 className="font-medium">Description</h4>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                {job.description}
+                {localJob.description}
               </p>
             </div>
 
@@ -115,20 +145,27 @@ export default function ExperienceCard({ job, isExpanded, onToggle }: Experience
                   
                   <div className="space-y-3">
                     <div className="flex flex-wrap gap-2">
-                      {job.skills.map((skill, index) => (
-                        <Badge key={index} variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200">
+                      {localJob.skills.map((skill, index) => (
+                        <Badge key={index} variant="secondary" className="bg-blue-50 text-blue-700 border-blue-200 flex items-center gap-1">
                           {skill}
+                          <button
+                            onClick={() => handleRemoveSkill('skills', skill)}
+                            className="ml-1 hover:bg-blue-200 rounded-full p-0.5 transition-colors"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
                         </Badge>
                       ))}
                     </div>
                     
-                    {job.aiSuggestedSkills.length > 0 && (
+                    {localJob.aiSuggestedSkills.length > 0 && (
                       <div className="space-y-2">
                         <p className="text-xs font-medium text-muted-foreground">AI Suggested Skills</p>
                         <div className="flex flex-wrap gap-2">
-                          {job.aiSuggestedSkills.map((skill, index) => (
+                          {localJob.aiSuggestedSkills.map((skill, index) => (
                             <button
                               key={index}
+                              onClick={() => handleAddSuggestedSkill('skills', skill)}
                               className="text-xs px-2 py-1 rounded border border-blue-200 text-blue-600 hover:bg-blue-50 transition-colors flex items-center gap-1"
                             >
                               <Plus className="w-3 h-3" />
@@ -173,20 +210,27 @@ export default function ExperienceCard({ job, isExpanded, onToggle }: Experience
                   
                   <div className="space-y-3">
                     <div className="flex flex-wrap gap-2">
-                      {job.software.map((software, index) => (
-                        <Badge key={index} variant="secondary" className="bg-green-50 text-green-700 border-green-200">
+                      {localJob.software.map((software, index) => (
+                        <Badge key={index} variant="secondary" className="bg-green-50 text-green-700 border-green-200 flex items-center gap-1">
                           {software}
+                          <button
+                            onClick={() => handleRemoveSkill('software', software)}
+                            className="ml-1 hover:bg-green-200 rounded-full p-0.5 transition-colors"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
                         </Badge>
                       ))}
                     </div>
                     
-                    {job.aiSuggestedSoftware.length > 0 && (
+                    {localJob.aiSuggestedSoftware.length > 0 && (
                       <div className="space-y-2">
                         <p className="text-xs font-medium text-muted-foreground">AI Suggested Software</p>
                         <div className="flex flex-wrap gap-2">
-                          {job.aiSuggestedSoftware.map((software, index) => (
+                          {localJob.aiSuggestedSoftware.map((software, index) => (
                             <button
                               key={index}
+                              onClick={() => handleAddSuggestedSkill('software', software)}
                               className="text-xs px-2 py-1 rounded border border-green-200 text-green-600 hover:bg-green-50 transition-colors flex items-center gap-1"
                             >
                               <Plus className="w-3 h-3" />
@@ -230,7 +274,7 @@ export default function ExperienceCard({ job, isExpanded, onToggle }: Experience
       <AIInterviewDialog 
         isOpen={showInterviewDialog}
         onClose={() => setShowInterviewDialog(false)}
-        job={job}
+        job={localJob}
       />
     </Card>
   );
